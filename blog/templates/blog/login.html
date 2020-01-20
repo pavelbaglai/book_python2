@@ -1,0 +1,13 @@
+{% extends 'blog/siteshab.html' %}
+{% block title %}
+{% endblock%}
+{% block body %}
+  {% if form.errors %}
+    <p>Неверный логин или пароль.</p>
+  {% endif %}
+    <form action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Войти</button>
+    </form>
+{% endblock %}

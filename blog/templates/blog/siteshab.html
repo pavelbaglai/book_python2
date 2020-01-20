@@ -1,0 +1,25 @@
+{% load staticfiles %}
+<html>
+  <head>
+    <title>КНИГА.RU</title>
+    <link rel="stylesheet" href="{% static '/bootstrap/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '/bootstrap/bootstrap-theme.min.css' %}">
+    <link rel="stylesheet" href="{% static '/css/blog.css' %}"
+  </head>
+<body>
+  <header>
+    <a href="/" title="На главную" id="logo">ШКОЛЬНАЯ КНИГА.RU </a>
+    {% if user.is_authenticated %}
+    <span class='a1'><a href="{% url 'logout' %}" title="Выход">  Выход </a></span>
+    <span class='a1' >Здравствуйте, {{user.username}}</span>
+    {% else%}
+    <span class='a1'><a href="{% url 'register' %}" title="Регистрация"> Регистрация </a></span>
+    <span class='a1'><a href="{% url 'login' %}" title="Зайти"> Вход </a></span>
+    {% endif %}
+    {% block header %}
+    {% endblock %}
+  </header>
+    {% block body %}
+    {% endblock %}
+</body>
+</html>

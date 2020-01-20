@@ -1,0 +1,57 @@
+{% extends 'blog/siteshab.html' %}
+{% block body %}
+<div id='pst'>
+  <table width="80%">
+    <tr>
+      <td >
+         <h1>{{ post.title }}</h1>
+         <img src={{ post.img.url }} width="300" height="350"  >
+      </td>
+      <td >
+         <h4>{{ post.F_author|linebreaksbr }}</h4>
+         <p>{{ post.text|linebreaksbr }}</p>
+
+          {% for bu in F_user %}
+          <p>{{ bu.user }}</p>
+          {% endfor %}
+      </td>
+    </tr>
+  </table>
+</div>
+
+{% if user.is_authenticated %}
+<html>
+<head>
+
+    <title>Django</title>
+</head>
+<body>
+
+
+    <form action="" method="post">
+
+
+        <label>Отзыв</label>
+        <textarea name="message">{{ form.message }}</textarea>
+
+        <input type="submit" value="Отправить">
+        {% csrf_token %}
+    </form>
+</body>
+</html>
+
+{% endif %}
+
+
+
+
+<script>
+    var pos = 0;
+    while (true) {
+          var foundPos = document.body.innerHTML.indexOf("blog/", pos);
+          if (foundPos == -1) break;
+          document.getElementById("pst").innerHTML= document.getElementById("pst").innerHTML.replace('blog/', '/');
+          pos = foundPos + 1; // продолжить поиск со следующей
+                 }
+</script>
+{% endblock %}

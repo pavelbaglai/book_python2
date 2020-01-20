@@ -1,0 +1,102 @@
+{% extends 'blog/siteshab.html' %}
+{% block header %}
+
+{% if user.is_staff == True %}
+  <a href="#openModal" id="openM"><span class='contact' >Добавить книгу</span></a>
+  <div id="openModal" class="modalDialog">
+    <div>
+        <a href="#close" title="Закрыть" class="close">X</a>
+        <ul id="rezult"></ul>
+        <h1>Добавить:</h1>
+        <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="save btn btn-default" id="save">Сохранить</button>
+        </form>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}
+{% block body %}
+    <div id='pst'>
+      <table >
+       {% for post in posts %}
+         <div>
+            <tr>
+              <td>
+                <h2><a href="{% url 'bookexmp' pk=post.pk %}">{{ post.title }}</a></h2>
+                <img src={{ post.img.url }} width="250" height="250"  >
+              </td>
+              <td>
+                <p>  </p>
+                <h4>{{ post.book_author|linebreaksbr }}</h4>
+                <p>{{ post.text|linebreaksbr }}</p>
+
+                  {% if user.is_authenticated %}
+                    <button type="button">
+
+
+                    </button>
+
+                  {% endif %}
+              </td>
+            </tr>
+         </div>
+       {% endfor %}
+      </table>
+    </div>
+<center>
+  <table>
+      <tr>
+        {% if posts.has_previous %}
+        <td class="arrow"  ><a  href="/page/{{ posts.previous_page_number}}/" id="a2">&laquo;</a></td>
+          {% else %}
+          <td class="arrow unavailable"  ><a href="" id="a2">&laquo;</a></td>
+        {% endif %}
+        {% for page in posts.paginator.page_range %}
+          {% if page == posts.number %}
+            <td class="current"><a href="/page/{{ page }}" id="a2"></a></td>
+          {% else %}
+            <td><a href="/page/{{ page }}" id="a2">{{ page }}</a></td>
+          {% endif %}
+        {% endfor %}
+        {% if posts.has_next %}
+          <td class="arrow"><a href="/page/{{ posts.next_page_number }}/" id="a2" >&raquo;</a></td>
+        {% else %}
+          <td class="arrow unavailable" ><a href="" id="a2">&raquo;</a></td>
+        {% endif %}
+      </tr>
+   </table>
+</center>
+<script>
+    var pos = 0;
+            while (true) {
+                  var foundPos = document.body.innerHTML.indexOf("blog/", pos);
+                  if (foundPos == -1) break;
+                  document.getElementById("pst").innerHTML= document.getElementById("pst").innerHTML.replace('blog/', '/');
+                  pos = foundPos + 1; // продолжить поиск со следующей
+                         }
+    var a = document.getElementById('save');
+    a.onclick = function()
+                        {
+                          var data = [];
+                          var rezult = document.getElementById('rezult');
+                          $(rezult).empty();
+                          var book_author = document.getElementById('id_book_author').value;
+                          var title = document.getElementById('id_title').value;
+                          var text = document.getElementById('id_text').value;
+                          var img = document.getElementById('id_img').value;
+                          var err = 0;
+                            if (book_author=='') {data.push('Введите название книги'); err++};
+                            if (title=='') {data.push('Введите описание книги'); err++};
+                            if (text=='') {data.push('Введите описание книги'); err++};
+                            if (!img) {data.push('Загрузите фотографию'); err++};
+                          for (var i=0; i<err; i++ )
+                          {
+                            var li = document.createElement('li');
+                            li.appendChild(document.createTextNode(data[i]));
+                            rezult.appendChild(li);
+                          }
+                        }
+</script>
+{% endblock %}
